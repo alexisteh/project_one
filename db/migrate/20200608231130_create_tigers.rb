@@ -3,6 +3,7 @@ class CreateTigers < ActiveRecord::Migration[5.2]
     create_table :tigers do |t|
       t.string :name 
       t.integer :price 
+      t.string :breed 
       t.integer :health 
       t.datetime :time_born  
       t.boolean :alive?, default: :true 

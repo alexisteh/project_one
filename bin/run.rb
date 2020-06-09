@@ -15,21 +15,21 @@ end
 def pick_character_and_zoo
     choices = ["Joe Exotic", "Carole Baskin", "Doc Bhagaven Antle"]
     char_name = $prompt.select("Pick your character!", choices)
-    if char_name = "Joe Exotic"
+    if char_name == "Joe Exotic"
         start_money = 1200 
-    elsif char_name = "Carole Baskin"
+    elsif char_name == "Carole Baskin"
         start_money = 800 
     else start_money = 1000
     end 
-    zoo_object = Zookeeper.create(name: char_name, money: start_money, alive?: true)  
+    zookeeper_object = Zookeeper.create(name: char_name, money: start_money, alive?: true)  
     puts "Welcome," + char_name +" !"
 
     zoo_name = $prompt.ask("Now, name your zoo:")
-    Zoo.create(name: zoo_name, end_money: start_money, zookeeper_id = zoo_object.id)
-    puts Zoo.zookeeper_id 
+    zoo_object = Zoo.create(name: zoo_name, end_money: start_money, zookeeper_id: zookeeper_object.id)
+    puts zoo_object.zookeeper_id 
+    puts zoo_object.end_money
 end 
-
-pick 
+ 
 
 def game_run_method 
     puts "good"

@@ -2,6 +2,7 @@ class CreateTigers < ActiveRecord::Migration[5.2]
   def change
     create_table :tigers do |t|
       t.string :name 
+      t.string :breed 
       t.integer :price 
       t.integer :health 
       t.datetime :time_born  

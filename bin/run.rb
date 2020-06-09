@@ -26,8 +26,7 @@ def pick_character_and_zoo
 
     zoo_name = $prompt.ask("Now, name your zoo:")
     zoo_object = Zoo.create(name: zoo_name, end_money: start_money, zookeeper_id: zookeeper_object.id)
-    puts zoo_object.zookeeper_id 
-    puts zoo_object.end_money
+    puts "You're all set! You, #{char_name}, are in charge of #{zoo_name} with starting funds of $#{start_money}!"
 end 
  
 

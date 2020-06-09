@@ -28,7 +28,16 @@ def pick_character_and_zoo
     zoo_object = Zoo.create(name: zoo_name, end_money: start_money, zookeeper_id: zookeeper_object.id)
     puts "You're all set! You, #{char_name}, are in charge of #{zoo_name} with starting funds of $#{start_money}!"
 end 
- 
+
+def buy_food 
+    choices = []
+
+end 
+
+def buy_tigers
+    choices = blank_zoo.tigers.map {|t| t.breed } 
+    
+end 
 
 def game_run_method 
     puts "good"

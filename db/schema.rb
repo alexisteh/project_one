@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 2020_06_08_232212) do
     t.integer "zoo_id"
   end
 
-  create_table "zoo_foods", force: :cascade do |t|
+  create_table "zoofoods", force: :cascade do |t|
     t.integer "zoo_id"
     t.integer "food_id"
   end

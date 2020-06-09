@@ -3,6 +3,6 @@ class Zoo < ActiveRecord::Base
 
     has_many :tigers 
 
-    has_many :zoo_foods 
-    has_many :foods, through: :zoo_foods
+    has_many :zoofoods 
+    has_many :foods, through: :zoofoods
 end 

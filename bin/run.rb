@@ -116,17 +116,6 @@ def buy_tiger
 end 
 
 def buy_food 
-<<<<<<< HEAD
-    choices = Food.all.map{ |food| food.name }
-    food_choice = $prompt.select("Which food will you feed your tiger today?", choices)
-    price = Food.all.find_by(name: food_choice).price 
-    food_final = Food.all.find_by(name: food_choice)
-
-    if Zoo.last.money >= price 
-        puts "You just bought #{food_choice}!" 
-        Zoofood.create(zoo_id: Zoo.last.id, food_id: food_final.id) 
-        resulting_money = Zoo.last.money - price 
-=======
     choices = Food.all.map{|food| food.name + " for $#{food.price}"}
     food_choice = $prompt.select("Which food will you feed your tiger today?", choices).split(" ")
     food_choice.pop(2)
@@ -137,7 +126,6 @@ def buy_food
         puts "You just bought #{food_choice}!" 
         Zoofood.create(zoo_id: Zoo.last.id, food_id: Food.all.find_by(name: food_choice).id) #add food to zoo through joiner class
         resulting_money = Zoo.last.money - price #update money after buying food 
->>>>>>> alexis
         Zoo.last.update_attribute(:money, resulting_money)
         game_run_method
     else 
@@ -264,17 +252,13 @@ f3 = Zoofood.create(zoo_id: Zoo.last.id, food_id: Food.find_by(name: "Beef").id)
 f3 = Zoofood.create(zoo_id: Zoo.last.id, food_id: Food.find_by(name: "Beef").id) 
 f3 = Zoofood.create(zoo_id: Zoo.last.id, food_id: Food.find_by(name: "Walmart Meats").id) 
 
-<<<<<<< HEAD
 Zookeeper.create(name: "Bob", alive?: true)
 z1 = Zoo.create(name: "zoo1" , money: 1000, zookeeper_id: Zookeeper.last.id)
 t1 = Tiger.create(name: "Hello", zoo_id: z1.id, bought?: true, alive?: true, health: 100, price: 1000) 
 t2 = Tiger.create(name: "Bye", zoo_id: z1.id, bought?: true, alive?: true, health: 200, price: 300) 
-showcase_tiger 
-=======
-sell_tiger
 
 
->>>>>>> alexis
+
 
 # turn_choices = ["feed tiger", "sell tiger", "showcase a tiger", "buy food"]
 # turn_choice = $prompt.select("Options:", turn_choices)

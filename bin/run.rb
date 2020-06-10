@@ -8,31 +8,40 @@ require 'terminal-table'
 #dead tigers in zoo: bought = true, alive = false, time_born != nil
 #sold tigers: bought = false, alive = nil, time_born != nil
 
+#things to do:
+    # put price in buying menus: buy_tiger 
+    # put unit number in zoo stats food supply 
+    # add more available tigers! 
+
+
 $prompt = TTY::Prompt.new 
 
-def entry_screen 
-    #puts big TIGER KING words 
-    choices = ["Play the game", "Look at Highscores"]
-    choice = $prompt.select("Welcome! Here are your options:", choices)
-    if choice == "Play the game"
-        opening_message   
+
+def opening_message 
+    #razzle dazzle letters 
+    input = $prompt.yes?("Do you want to own tigers?")
+    if input == true 
+        choices = ["Start your Tiger zoo!", "View Highscores"]
+        $prompt.select("What would you like to do?", choices) do |c| 
+            c.choice "Start your Tiger zoo!", -> {pick_character_and_zoo}
+            c.choice "View Highscores", -> {show_highscores}
+        end 
     else 
-        show_highscores       
+        puts "You were eaten by a tiger!"
+        exit
     end 
 end 
 
 def show_highscores
-    Zoo.all.select{:zoo_id != nil}. 
-end 
-
-def opening_message 
-    input = $prompt.yes?("Do you want to own tigers?")
-    if input == true 
-        pick_character_and_zoo 
-    else 
-        puts "You were eaten by a tiger!"
-        return 
-    end 
+    top_games = Zoo.order(:money).last(5).reverse 
+    rows = [] 
+    top_games.each do |zoo| 
+        zookeeper_name = Zookeeper.find(zoo.zookeeper_id).name 
+        rows << [zoo.name, zookeeper_name, zoo.money] 
+    end  
+    highscores_table = Terminal::Table.new :title => "High Scores", :rows => rows
+    highscores_table.style = {:width => 100, :padding_left => 3, :border_x => "=", :border_i => "x"}
+    puts highscores_table 
 end 
 
 def pick_character_and_zoo
@@ -47,7 +56,7 @@ def pick_character_and_zoo
     else start_money = 1000 
     end 
     zookeeper_object = Zookeeper.create(name: char_name, alive: true)  
-    puts "Welcome," + char_name +" !" 
+    puts "Welcome, " + char_name +" !" 
 
     zoo_name = $prompt.ask("Now, name your zoo:")
     Zoo.create(name: zoo_name, money: start_money, zookeeper_id: zookeeper_object.id)
@@ -57,15 +66,17 @@ end
 
 def game_run_method
     check_tigers_over_time  
+    check_stats
 
     if Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id && tiger.alive == true} == [] 
         choices =  [
             'Buy a Tiger',
-            {name: 'Sell a Tiger', disabled: 'You do not have a tiger to sell!'},
-            {name: 'Feed a Tiger', disabled: 'You do not have a tiger to feed!'},
-            {name: 'Showcase a Tiger', disabled: 'You do not have a tiger to showcase!'},
+            {name: 'Sell a Tiger', disabled: '(You do not have a tiger to sell!)'},
+            {name: 'Feed a Tiger', disabled: '(You do not have a tiger to feed!)'},
+            {name: 'Showcase a Tiger', disabled: '(You do not have a tiger to showcase!)'},
             'Buy Food',
-            'Check my Stats' 
+            'Check on Tigers',
+            'Exit Game'
             ]
     else 
         choices = [
@@ -74,7 +85,8 @@ def game_run_method
         'Feed a Tiger',
         'Showcase a Tiger', 
         'Buy Food',
-        'Check my Stats'
+        'Check on Tigers',
+        'Exit Game'
         ] 
     end 
 
@@ -89,35 +101,27 @@ def game_run_method
         showcase_tiger
     elsif choice == "Buy Food"
         buy_food
-    elsif choice == "Check my Stats"
-        check_stats 
+    elsif choice == "Check on Tigers"
+        check_health  
+    elsif choice == 'Exit Game'
+        exit_game
     end  
 end 
 
 def check_stats 
-    
     current_money = Zoo.last.money 
     current_tigers = Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id && tiger.alive == true}.map(&:name).join(", ") 
     dead_tigers = Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id && tiger.alive == false}.map(&:name).join(", ")
     sold_tigers = Tiger.all.select{|tiger| tiger.bought == false && tiger.zoo_id == Zoo.last.id && tiger.alive == nil}.map(&:name).join(", ")
     current_food_supply = Zoo.last.foods.map(&:name).join(", ") 
-
-    choices = ["Check on Tigers", "Check my Zoo Stats"]
-    input = $prompt.select("Choose what you want to check!", choices)
-
-    if input == "Check on Tigers"
-        check_health 
-    elsif input == "Check my Zoo Stats"
-        rows = []
-        rows << ['Current Funds', current_money]
-        rows << ['Your Tigers', current_tigers]
-        rows << ['Dead Tigers', dead_tigers]
-        rows << ['Your Food Supply', current_food_supply]
-        zoo_stats_table = Terminal::Table.new :title => "Your Zoo Stats", :rows => rows
-        zoo_stats_table.style = {:width => 40, :padding_left => 3, :border_x => "=", :border_i => "x"}
-        puts zoo_stats_table 
-        game_run_method
-    end
+    rows = []
+    rows << ['Current Funds', current_money]
+    rows << ['Your Tigers', current_tigers] 
+    rows << ['Dead Tigers', dead_tigers]
+    rows << ['Your Food Supply', current_food_supply]
+    zoo_stats_table = Terminal::Table.new :title => "Your Zoo Stats", :rows => rows
+    zoo_stats_table.style = {:width => 100, :padding_left => 3, :border_x => "=", :border_i => "x"}
+    puts zoo_stats_table 
 end 
 
 def check_tigers_over_time
@@ -129,6 +133,7 @@ def check_tigers_over_time
     starved_tigers = [] 
     hungry_tigers = [] 
     dead_tigers = [] 
+
     existing_tigers.each do |tiger_object|
         if tiger_object.time_last_fed == nil 
             time_considered = tiger_object.time_born 
@@ -148,8 +153,11 @@ def check_tigers_over_time
             dead_tigers << tiger_object 
             hungry_tigers.delete(tiger_object) 
             starved_tigers.delete(tiger_object) 
+        elsif tiger_object.health >= 200 
+            tiger_object.update_attribute(:health, 200)
         end 
     end 
+    
     if starved_tigers != []  
         puts "Tigers are starving: #{starved_tigers.map(&:name).join(", ")}." 
     end 
@@ -198,11 +206,26 @@ def check_health
     end 
 end 
  
+#helper method for buy_tiger, checks if blank tiger has been bought before 
+def tiger_allowed(tiger_object)
+    already_bought_tigers = Tiger.all.select{|tiger| tiger.time_born != nil && tiger.zoo_id == Zoo.last.id}   
+    if already_bought_tigers.find{|tiger| tiger.name == tiger_object.name}
+        return false 
+    end 
+    return true 
+end 
 
 def buy_tiger 
     #pick from unbought tigers to buy from. in each session, rake::seed clears all non-blank_zoo tigers. 
-    choices = Tiger.all.select{|tiger| (tiger.time_born == nil)}.map(&:name) 
+
+    choices = Tiger.all.select{|tiger| (tiger.time_born == nil) && tiger_allowed(tiger)}.map(&:name) 
+    choices << "[Go Back]"
+    
     tiger_chosen = $prompt.select("Pick your tiger!", choices) 
+    if tiger_chosen == "[Go Back]"
+        game_run_method
+    end 
+
     tiger_object = Tiger.find_by(name: tiger_chosen) 
     
     if Zoo.last.money >= tiger_object.price  
@@ -247,7 +270,13 @@ def sell_tiger
         game_run_method
     else 
         choices = available_tigers.map{|tiger| tiger.name + " (bought for #{tiger.price})"} 
+        choices << "[Go Back]"
         tiger_chosen = $prompt.select("Pick a tiger to sell!", choices).split(" ")
+
+        if tiger_chosen == ["[Go", "Back]"]
+            game_run_method 
+        end 
+
         tiger_chosen.pop(3)
         tiger_object = Tiger.all.find_by(name: tiger_chosen.join(" "), bought: true, zoo_id: Zoo.last.id, alive: true)
         price = tiger_object.price 
@@ -315,10 +344,16 @@ def feed_tiger
         game_run_method
     else 
         tiger_choices = available_tigers.map(&:name)
+        tiger_choices << "[Go Back]"
+        
         tiger_chosen = $prompt.select("Choose a Tiger to feed!", tiger_choices)
+        
+        if tiger_chosen == "[Go Back]" 
+            game_run_method
+        end 
+        
         food_choices = available_foods.map(&:name).uniq 
         food_chosen = $prompt.select("What do you want to feed your tiger?", food_choices)  
-
         tiger_object = Tiger.all.find_by(name: tiger_chosen, zoo_id: Zoo.last.id, bought: true, alive: true) 
         tiger_object.update_attribute(:time_last_fed, Time.now) 
         food_object = Food.all.find_by(name: food_chosen) 
@@ -328,24 +363,33 @@ def feed_tiger
         
         # Determine whether the tiger prefers the given food or not 
         
-        tied_blank_tiger = Tiger.all.find_by(name: tiger_chosen, bought: true, alive: true, time_born: nil)  
-        if FoodPreference.find_by(food_id: food_object.id, tiger_id: tied_blank_tiger.id)  
-            change = 50
+        tied_blank_tiger = Tiger.all.find_by(name: tiger_chosen, alive: true, time_born: nil)  
+
+        if FoodPreference.find_by(food_id: food_object.id, tiger_id: tied_blank_tiger.id) 
+            change = 50 
             puts "Your tiger #{tiger_chosen} is very happy!" 
         elsif food_chosen == "Walmart Meats"
             change = -40 
             puts "Your Tiger is ill! Don't feed him Walmart Meat next time!"
         else 
-            change = 5
+            change = 5 
             puts "Your #{tiger_chosen} doesn't really enjoy that food!" 
         end
- 
-        updated_health = tiger_object.health + change  
+
+        if tiger_object.health + change >= 200 
+            updated_health = 200 
+        else updated_health = tiger_object.health + change  
+        end 
         tiger_object.update_attribute(:health, updated_health)
         puts "Your tiger's new health is now #{updated_health}."
         game_run_method 
-     
     end 
+end 
+
+def exit_game 
+    puts "Thanks for playing Tiger King!" 
+    puts "You made $#{Zoo.last.money} in #{Zoo.last.name}. Good Job!"  
+    exit
 end 
 
 # f2 = Zoofood.create(zoo_id: Zoo.last.id, food_id: Food.find_by(name: "Organic Chicken").id) 
@@ -356,4 +400,4 @@ end
 # turn_choice = $prompt.select("Options:", turn_choices)
 
 
-game_run_method
+opening_message

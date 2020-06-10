@@ -1,8 +1,8 @@
 #zoos are individual gameplay sessions 
 
 if Zoo.find_by(name: "blank_zoo", zookeeper_id: nil) 
-    blank_zoo = Zoo.find_by(name: "blank_zoo", zookeeper_id: nil)  
-else blank_zoo = Zoo.create(name: "blank_zoo", zookeeper_id: nil) 
+    blank_zoo = Zoo.find_by(name: "blank_zoo", zookeeper_id: nil, money: nil)  
+else blank_zoo = Zoo.create(name: "blank_zoo", zookeeper_id: nil, money: nil) 
 end 
 
 #seed blank, tigers, buyable tigers

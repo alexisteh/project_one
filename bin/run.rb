@@ -67,23 +67,20 @@ def pick_character_and_zoo
     puts "You, #{Zookeeper.last.name}, are in charge of #{zoo_name} with starting funds of $#{start_money}!"
 end 
 
-def buy_food 
-    choices = []
-
-end 
-
-def buy_tigers
-    choices = blank_zoo.tigers.map {|t| t.breed } 
-    
-end 
-
 def game_run_method 
     current_money = Zoo.last.money 
     current_tigers = Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id && tiger.alive == true}.map(&:name)  
 
     check_health
-
     current_food_supply = Zoofood.all.select{|zoo_food| zoo_food.zoo_id == Zoo.last.id} 
+    
+    $prompt.select("What would you like to do next?", filter: true) do |c|
+        c.choice 'Feed your tiger', -> {feed_tiger}
+        c.choice 'Buy a Tiger', -> {buy_tiger}
+        c.choice 'Sell a Tiger', -> {sell_tiger}
+        c.choice 'Buy Food', -> {buy_food}
+        c.choice 'See your current stats', -> {check_stats}
+    end
 end 
 
 def check_health 
@@ -138,7 +135,7 @@ end
 def sell_tiger 
     available_tigers = Tiger.all.select{|tiger| (tiger.bought == true) && (tiger.zoo_id == Zoo.last.id) && (tiger.alive == true)}
     if available_tigers.length == 0 
-        puts "you have no tigers!"
+        puts "You have no tigers!"
         game_run_method
     else 
         choices = available_tigers.map{|tiger| tiger.name + " (bought for #{tiger.price})"} 

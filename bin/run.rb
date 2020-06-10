@@ -3,8 +3,7 @@ require 'tty-prompt'
 require 'pry'
 require 'terminal-table'
 
-#blank tigers before buying: bought = false, alive = true, time_born = nil
-#blank tigers after buying: bought = true, alive = true, time_born = nil  
+#blank tigers before/after buying: bought = false, alive = true, time_born = nil
 #living tigers in zoo: bought = true, alive = true, time_born != nil
 #dead tigers in zoo: bought = true, alive = false, time_born != nil
 #sold tigers: bought = false, alive = nil, time_born != nil
@@ -20,6 +19,10 @@ def entry_screen
     else 
         show_highscores       
     end 
+end 
+
+def show_highscores
+    Zoo.all.select{:zoo_id != nil}. 
 end 
 
 def opening_message 
@@ -87,7 +90,7 @@ def game_run_method
     elsif choice == "Buy Food"
         buy_food
     elsif choice == "Check my Stats"
-        check_stats    
+        check_stats 
     end  
 end 
 
@@ -167,7 +170,6 @@ def check_health
         game_run_method 
     else 
         rows = [] 
-        rows << ["Name", "Alive?", "Health", "Feeding Status"]  
 
         existing_tigers.each do |tiger_object| 
 
@@ -183,14 +185,15 @@ def check_health
                 living_status = "alive"
                 if Time.now - time_considered > 240.0 
                     feeding_status = "Needs to be fed!" 
-                elsif Time.now - tiger_object.time_last_fed > 80.0 
+                elsif Time.now - time_considered > 80.0 
                     feeding_status = "Needs to be fed soon!"
-                else message = "Well-nourished!"
+                else feeding_status = "Well-nourished!"
                 end 
             end 
             rows << [tiger_object.name, living_status, tiger_object.health, feeding_status]  
         end 
         tiger_stats_table = Terminal::Table.new :title => "Your Tiger Stats", :rows => rows 
+        puts tiger_stats_table 
         game_run_method
     end 
 end 
@@ -198,14 +201,14 @@ end
 
 def buy_tiger 
     #pick from unbought tigers to buy from. in each session, rake::seed clears all non-blank_zoo tigers. 
-    choices = Tiger.all.select{|tiger| (tiger.bought == false) && (tiger.alive == true)}.map(&:name) 
+    choices = Tiger.all.select{|tiger| (tiger.time_born == nil)}.map(&:name) 
     tiger_chosen = $prompt.select("Pick your tiger!", choices) 
     tiger_object = Tiger.find_by(name: tiger_chosen) 
     
     if Zoo.last.money >= tiger_object.price  
-        tiger_object.update_attribute(:bought, true)  #same tiger cannot be bought again 
         new_tiger = tiger_object.dup  #tiger instance duplicated to current zo
         new_tiger.save 
+        new_tiger.update_attribute(:bought, true) 
         new_tiger.update_attribute(:time_born, Time.now) #set time born to new tiger 
         new_tiger.update_attribute(:zoo_id, Zoo.last.id) #set current zoo_id to new tiger 
         resulting_money = Zoo.last.money - tiger_object.price  #updates zoo's money 
@@ -326,7 +329,6 @@ def feed_tiger
         # Determine whether the tiger prefers the given food or not 
         
         tied_blank_tiger = Tiger.all.find_by(name: tiger_chosen, bought: true, alive: true, time_born: nil)  
-        binding.pry 
         if FoodPreference.find_by(food_id: food_object.id, tiger_id: tied_blank_tiger.id)  
             change = 50
             puts "Your tiger #{tiger_chosen} is very happy!" 
@@ -354,4 +356,4 @@ end
 # turn_choice = $prompt.select("Options:", turn_choices)
 
 
-entry_screen
+game_run_method

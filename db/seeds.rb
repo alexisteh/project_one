@@ -28,11 +28,11 @@ t7.update_attribute(:zoo_id, blank_zoo.id)
 #foods available  
 Food.delete_all 
 
-f1 = Food.create(name: "Walmart Meats", price: 50 )
-f2 = Food.create(name: "Organic Chicken", price: 200)
-f3 = Food.create(name: "Steak & Kidney Pie", price: 300)
+f1 = Food.create(name: "Walmart Meats", price: 50)
+f2 = Food.create(name: "Organic Chicken", price: 100)
+f3 = Food.create(name: "Steak & Kidney Pie", price: 200)
 f4 = Food.create(name: "Human Flesh", price: 750)
-f5 = Food.create(name: "Beef", price: 400)
+f5 = Food.create(name: "Beef", price: 200)
 
 FoodPreference.delete_all 
 

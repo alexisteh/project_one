@@ -26,7 +26,6 @@ ActiveRecord::Schema.define(version: 2020_06_08_232212) do
     t.string "name"
     t.string "breed"
     t.integer "price"
-    t.string "breed"
     t.integer "health"
     t.datetime "time_born"
     t.boolean "alive", default: true

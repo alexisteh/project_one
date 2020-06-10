@@ -1,6 +1,11 @@
 require_relative '../config/environment.rb'
 require 'pry'
 
+#blank tigers before buying have bought = false and alive = true 
+#living tigers in zoo have bought = true and alive = true 
+#dead tigers in zoo have bought = true and alive = false
+#sold tigers have bought = false and alive = false 
+
 $prompt = TTY::Prompt.new 
 
 def opening_message 
@@ -51,9 +56,9 @@ end
 
 def buy_tiger 
     #pick from unbought tigers to buy from. in each session, rake::seed clears all non-blank_zoo tigers. 
-    choices = Tiger.all.select{|tiger| tiger.bought == false}.map(&:name) 
+    choices = Tiger.all.select{|tiger| (tiger.bought == false) && (tiger.alive == true)}.map(&:name) 
     tiger_chosen = $prompt.select("Pick your tiger!", choices) 
-    tiger_object = Tiger.find_by(name: tiger_chosen)
+    tiger_object = Tiger.find_by(name: tiger_chosen) 
     
     if Zoo.last.money >= tiger_object.price  
         tiger_object.update_attribute(:bought, true)  #same tiger cannot be bought again 
@@ -93,49 +98,71 @@ end
 
 def sell_tiger 
     available_tigers = Tiger.all.select{|tiger| (tiger.bought == true) && (tiger.zoo_id == Zoo.last.id) && (tiger.alive == true)}
-    choices = available_tigers.map{|tiger| tiger.name + " (bought for #{tiger.price})"} 
-    tiger_chosen = $prompt.select("Pick a tiger to sell!", choices).split(" ")
-    tiger_chosen.pop(3)
-    tiger_object = Tiger.all.find_by(name: tiger_chosen.join(" ") )
-    price = tiger_object.price 
-    health = tiger_object.health 
-
-    if health >= 50
-        sell_price = (price*((1+(health/200))*(1+0.5*(rand)))).to_i 
-        resulting_money = Zoo.last.money + sell_price  
-        Zoo.last.update_attribute(:money, resulting_money)
-        tiger_object.destroy!
-        puts "You just sold #{tiger_object.name} for #{sell_price}! Say goodbye to your tiger!"
-        game_run_method 
-    elsif health <= 50
-        puts "This Tiger is too sick too sell!"
+    if available_tigers.length == 0 
+        puts "you have no tigers!"
         game_run_method
+    else 
+        choices = available_tigers.map{|tiger| tiger.name + " (bought for #{tiger.price})"} 
+        tiger_chosen = $prompt.select("Pick a tiger to sell!", choices).split(" ")
+        tiger_chosen.pop(3)
+        tiger_object = Tiger.all.find_by(name: tiger_chosen.join(" "), bought: true, zoo_id: Zoo.last.id, alive: true)
+        price = tiger_object.price 
+        health = tiger_object.health 
+
+        if health >= 50
+            sell_price = (price*((1+(health/200))*(1+0.5*(rand)))).to_i 
+            resulting_money = Zoo.last.money + sell_price  
+            Zoo.last.update_attribute(:money, resulting_money)
+            Zoo.last.save 
+            tiger_object.update_attribute(:bought, false) 
+            tiger_object.update_attribute(:alive, false) 
+            puts "You just sold #{tiger_chosen.join(" ")} for #{sell_price}! Say goodbye to your tiger!"
+            game_run_method 
+        elsif health <= 50
+            puts "This Tiger is too sick too sell!"
+            game_run_method
+        end 
     end 
 end 
 
-sell_tiger
+# char1 = Zookeeper.create(name: "Joe", alive: true )
+# z1 = Zoo.create(name: "zoo1", money: 2000 , zookeeper_id: Zookeeper.last.id)
+
 
 def showcase_tiger 
-    choices = Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id && tiger.alive == true}.map(&:name)  
-    tiger_chosen = $prompt.select("Pick a tiger to showcase at your local mall!", choices) 
-    health = Tiger.all.find_by(name: tiger_chosen).health 
-    price = Tiger.all.find_by(name: tiger_chosen).price 
-
-    input = $prompt.yes?("Are you sure you want to submit this tiger to torture?")
-    if input == true
-        updated_health = Tiger.all.find_by(name: tiger_chosen).health - 20  
-        Tiger.all.find_by(name: tiger_chosen).update_attribute(:health, updated_health) 
-        money_made = price*2*(0.5+(health/400)).to_i
-        resulting_money = Zoo.last.money + money_made 
-        Zoo.last.update_attribute(:money, resulting_money)
-        puts "#{tiger_chosen} is hurt! #{tiger_chosen}'s health went down to #{updated_health}."
+    available_tigers = Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id && tiger.alive == true}
+    
+    if available_tigers.length == 0
+        puts "You have no tigers!"
         game_run_method
     else 
-        puts "You are very kind!"
-        game_run_method
+        tiger_choices = available_tigers.map(&:name)  
+        tiger_chosen = $prompt.select("Pick a tiger to showcase at your local mall!", tiger_choices) 
+        tiger_object = Tiger.all.find_by(name: tiger_chosen, zoo_id: Zoo.last.id, bought: true, alive: true)
+        health = tiger_object.health 
+        price = tiger_object.price 
+
+        input = $prompt.yes?("Are you sure you want to submit this tiger to torture?")
+        if input == true
+            updated_health = health - 20  
+            tiger_object.update_attribute(:health, updated_health) 
+            money_made = price*2*(0.5+(health/400)).to_i 
+            resulting_money = Zoo.last.money + money_made 
+            Zoo.last.update_attribute(:money, resulting_money) 
+            if updated_health <= 0 
+                puts "You made #{money_made}, but #{tiger_chosen} is hurt so badly it died!" 
+            else puts "You made #{money_made}, but #{tiger_chosen} is traumatized! #{tiger_chosen}'s health went down to #{updated_health}."
+            end 
+            game_run_method 
+        else 
+            puts "You are very kind!"
+            game_run_method
+        end
     end
 end 
 
+
+showcase_tiger 
 
 def feed_tiger 
     choices = Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id && tiger.alive == true}.map(&:name)

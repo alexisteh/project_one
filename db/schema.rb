@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 2020_06_08_232212) do
 
   create_table "tigers", force: :cascade do |t|
     t.string "name"
+    t.string "breed"
     t.integer "price"
     t.string "breed"
     t.integer "health"

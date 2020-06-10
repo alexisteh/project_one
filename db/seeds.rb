@@ -26,11 +26,15 @@ t6.update_attribute(:zoo_id, blank_zoo.id)
 t7.update_attribute(:zoo_id, blank_zoo.id)
 
 #foods available  
+Food.delete_all 
+
 f1 = Food.create(name: "Walmart Meats", price: 50 )
 f2 = Food.create(name: "Organic Chicken", price: 200)
 f3 = Food.create(name: "Steak & Kidney Pie", price: 300)
 f4 = Food.create(name: "Human Flesh", price: 750)
 f5 = Food.create(name: "Beef", price: 400)
+
+FoodPreference.delete_all 
 
 #tiger1 foodprefs in food-tiger joiner pairs 
 t1p1 = FoodPreference.create(tiger_id: t1.id ,food_id: f1.id)

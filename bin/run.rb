@@ -2,6 +2,7 @@ require_relative '../config/environment.rb'
 require 'pry'
 
 #blank tigers before buying have bought = false and alive = true 
+#blank tigers after buying have bought = true, alive = true, and still have time_born = nil  
 #living tigers in zoo have bought = true and alive = true 
 #dead tigers in zoo have bought = true and alive = false
 #sold tigers have bought = false and alive = false 
@@ -144,7 +145,7 @@ def showcase_tiger
 
         input = $prompt.yes?("Are you sure you want to submit this tiger to torture?")
         if input == true
-            updated_health = health - 20  
+            updated_health = health - 50  
             tiger_object.update_attribute(:health, updated_health) 
             money_made = price*2*(0.5+(health/400)).to_i 
             resulting_money = Zoo.last.money + money_made 
@@ -161,41 +162,60 @@ def showcase_tiger
     end
 end 
 
-
-showcase_tiger 
-
 def feed_tiger 
-    choices = Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id && tiger.alive == true}.map(&:name)
-    choose_tiger = $prompt.select("Choose a Tiger to feed!", choices)
-    food_available = Zoofood.all.select{|zoo| zoo.id == Zoo.last.id}.map(&:name) 
-    food_choices = food_available.uniq 
-    choose_food = $prompt.select("What do you want to feed your tiger?", food_choices)  
-
-    tiger_object = Tiger.all.find_by(name: choose_tiger) 
-    food_object = Food.all.find_by(name: choose_food) 
-    zoofood_object = Zoofood.all.find_by(zoo_id: Zoo.last.id, food_id: food_object.id)
-    zoofood_object.update_attribute(:zoo.id, nil) 
-
-    # Determine whether the tiger prefers the given food or not 
-    
-    if FoodPreference.find_by(food_id: food_object.id, tiger_id: tiger_object.id) 
-        change = 20    
-        puts "Your #{choose_tiger} is very happy!" 
-    elsif choose_food == "Walmart Meats"
-        change = -20 
-        puts "Your Tiger is ill! Don't feed him Walmart Meat next time!"
+    available_tigers = Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id && tiger.alive == true}
+    available_foods = Zoo.last.foods 
+    if available_tigers.length == 0 || available_foods.length == 0 
+        if available_tigers.length == 0 && available_foods.length == 0 
+            puts "You have no tigers and no food!" 
+        elsif available_foods.length == 0 
+            puts "You don't have any food supplies!"
+        else
+            puts "You don't have any tigers to feed!"
+        end 
+        game_run_method
     else 
-        change = 5
-        puts "Your #{choose_tiger} doesn't really enjoy that food!" 
-    end
+        tiger_choices = available_tigers.map(&:name)
+        tiger_chosen = $prompt.select("Choose a Tiger to feed!", tiger_choices)
+        food_choices = available_foods.map(&:name).uniq 
+        food_chosen = $prompt.select("What do you want to feed your tiger?", food_choices)  
 
-    updated_health = Tiger.all.find_by(name: choose_tiger).health + change  
-    Tiger.all.find_by(name: choose_tiger).update_attribute(:health, updated_health)
-    puts "Your tiger's new health is #{updated_health}."
-    game_run_method 
+        tiger_object = Tiger.all.find_by(name: tiger_chosen, zoo_id: Zoo.last.id, bought: true, alive: true) 
+        food_object = Food.all.find_by(name: food_chosen) 
+        zoofood_object = Zoofood.all.find_by(zoo_id: Zoo.last.id, food_id: food_object.id)
+        zoofood_object.update_attribute(:zoo_id, nil) 
+        puts "Chomp chomp chomp!"
 
+        # Determine whether the tiger prefers the given food or not 
+        
+        tied_blank_tiger = Tiger.all.find_by(name: tiger_chosen, bought: true, alive: true, time_born: nil)  
+        binding.pry 
+        if FoodPreference.find_by(food_id: food_object.id, tiger_id: tied_blank_tiger.id)  
+            change = 40  
+            puts "Your tiger #{tiger_chosen} is very happy!" 
+        elsif food_chosen == "Walmart Meats"
+            change = -40 
+            puts "Your Tiger is ill! Don't feed him Walmart Meat next time!"
+        else 
+            change = 5
+            puts "Your #{tiger_chosen} doesn't really enjoy that food!" 
+        end
+ 
+        updated_health = tiger_object.health + change  
+        tiger_object.update_attribute(:health, updated_health)
+        puts "Your tiger's new health is now #{updated_health}."
+        game_run_method 
+     
+    end 
 end 
 
+f2 = Zoofood.create(zoo_id: Zoo.last.id, food_id: Food.find_by(name: "Organic Chicken").id) 
+f3 = Zoofood.create(zoo_id: Zoo.last.id, food_id: Food.find_by(name: "Beef").id) 
+f3 = Zoofood.create(zoo_id: Zoo.last.id, food_id: Food.find_by(name: "Beef").id) 
+f3 = Zoofood.create(zoo_id: Zoo.last.id, food_id: Food.find_by(name: "Walmart Meats").id) 
+
+buy_tiger
+feed_tiger 
 
 
 

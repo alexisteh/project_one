@@ -1,4 +1,5 @@
 require_relative '../config/environment.rb'
+require 'tty-prompt'
 require 'pry'
 require 'terminal-table'
 
@@ -9,16 +10,17 @@ require 'terminal-table'
 #sold tigers: bought = false, alive = nil, time_born != nil
 
 $prompt = TTY::Prompt.new 
- 
 
 def entry_screen 
-    choices = ["Play the game", "Look at Highscore"]
+    #puts big TIGER KING words 
+    choices = ["Play the game", "Look at Highscores"]
     choice = $prompt.select("Welcome! Here are your options:", choices)
     if choice == "Play the game"
-        opening_message         
+        opening_message   
+    else 
+        show_highscores       
     end 
 end 
-
 
 def opening_message 
     input = $prompt.yes?("Do you want to own tigers?")
@@ -51,7 +53,6 @@ def pick_character_and_zoo
 end 
 
 def game_run_method
-    
     check_tigers_over_time  
 
     if Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id && tiger.alive == true} == [] 
@@ -95,6 +96,7 @@ def check_stats
     current_money = Zoo.last.money 
     current_tigers = Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id && tiger.alive == true}.map(&:name).join(", ") 
     dead_tigers = Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id && tiger.alive == false}.map(&:name).join(", ")
+    sold_tigers = Tiger.all.select{|tiger| tiger.bought == false && tiger.zoo_id == Zoo.last.id && tiger.alive == nil}.map(&:name).join(", ")
     current_food_supply = Zoo.last.foods.map(&:name).join(", ") 
 
     choices = ["Check on Tigers", "Check my Zoo Stats"]
@@ -120,29 +122,40 @@ def check_tigers_over_time
     if existing_tigers.length == 0 
         return 
     end 
+
+    starved_tigers = [] 
+    hungry_tigers = [] 
+    dead_tigers = [] 
     existing_tigers.each do |tiger_object|
         if tiger_object.time_last_fed == nil 
             time_considered = tiger_object.time_born 
         else time_considered = tiger_object.time_last_fed 
         end 
+
         if Time.now - time_considered > 240.0 
             resulting_health = tiger_object.health - 20 
             tiger_object.update_attribute(:health, resulting_health)
-        elsif Time.now - tiger_object.time_last_fed > 80.0 
-        end 
-         
-        if 
-            
+            starved_tigers << tiger_object 
+        elsif Time.now - time_considered > 80.0
+            hungry_tigers << tiger_object  
         end 
         
         if tiger_object.health <= 0 
-            puts "#{tiger_object.name} is dead."
             tiger_object.update_attribute(:alive, false)
-        else 
-            puts "#{tiger_object.name} is alive and well."
+            dead_tigers << tiger_object 
+            hungry_tigers.delete(tiger_object) 
+            starved_tigers.delete(tiger_object) 
         end 
-    # set tiger status to dead if health <= 0 
-    # set tiger status to dead if not fed recently enough 
+    end 
+    if starved_tigers != []  
+        puts "Tigers are starving: #{starved_tigers.map(&:name).join(", ")}." 
+    end 
+    if hungry_tigers != []  
+        puts "Tigers are hungry: #{hungry_tigers.map(&:name).join(", ")}."
+    end 
+    if dead_tigers != []  
+        puts "Tigers have died: #{dead_tigers.map(&:name).join(", ")}."
+    end 
 end 
 
 def check_health 
@@ -163,24 +176,21 @@ def check_health
             else time_considered = tiger_object.time_last_fed 
             end 
 
-            if Time.now - time_considered > 240.0 
-                resulting_health = tiger_object.health - 20 
-                tiger_object.update_attribute(:health, resulting_health)
-                feeding_status = "Needs to be fed!" 
-            elsif Time.now - tiger_object.time_last_fed > 80.0 
-                feeding_status = "Needs to be fed soon!"
-            else message = "Well-nourished!"
-            end 
-
-            if tiger_object.health <= 0 
-                tiger_object.update_attribute(alive: false)
+            if tiger_object.alive = false 
                 living_status = "dead"
                 feeding_status = "–" 
-            else living_status = "alive"
+            else 
+                living_status = "alive"
+                if Time.now - time_considered > 240.0 
+                    feeding_status = "Needs to be fed!" 
+                elsif Time.now - tiger_object.time_last_fed > 80.0 
+                    feeding_status = "Needs to be fed soon!"
+                else message = "Well-nourished!"
+                end 
             end 
             rows << [tiger_object.name, living_status, tiger_object.health, feeding_status]  
         end 
-        tiger_stats_table = Terminal::Table.new :title => "Your Tiger Stats", :rows => row 
+        tiger_stats_table = Terminal::Table.new :title => "Your Tiger Stats", :rows => rows 
         game_run_method
     end 
 end 
@@ -208,7 +218,6 @@ def buy_tiger
     end 
 end 
 
-
 def buy_food 
     choices = Food.all.map{|food| food.name + " for $#{food.price}"}
     food_choice = $prompt.select("Which food will you feed your tiger today?", choices).split(" ")
@@ -227,7 +236,6 @@ def buy_food
         game_run_method
     end 
 end 
-
 
 def sell_tiger 
     available_tigers = Tiger.all.select{|tiger| (tiger.bought == true) && (tiger.zoo_id == Zoo.last.id) && (tiger.alive == true)}
@@ -311,7 +319,6 @@ def feed_tiger
         tiger_object = Tiger.all.find_by(name: tiger_chosen, zoo_id: Zoo.last.id, bought: true, alive: true) 
         tiger_object.update_attribute(:time_last_fed, Time.now) 
         food_object = Food.all.find_by(name: food_chosen) 
-        tiger_object.update_attribute()
         zoofood_object = Zoofood.all.find_by(zoo_id: Zoo.last.id, food_id: food_object.id)
         zoofood_object.update_attribute(:zoo_id, nil) 
         puts "Chomp chomp chomp!"
@@ -321,7 +328,7 @@ def feed_tiger
         tied_blank_tiger = Tiger.all.find_by(name: tiger_chosen, bought: true, alive: true, time_born: nil)  
         binding.pry 
         if FoodPreference.find_by(food_id: food_object.id, tiger_id: tied_blank_tiger.id)  
-            change = 40  
+            change = 50
             puts "Your tiger #{tiger_chosen} is very happy!" 
         elsif food_chosen == "Walmart Meats"
             change = -40 
@@ -343,11 +350,8 @@ end
 # f3 = Zoofood.create(zoo_id: Zoo.last.id, food_id: Food.find_by(name: "Beef").id) 
 # f3 = Zoofood.create(zoo_id: Zoo.last.id, food_id: Food.find_by(name: "Beef").id) 
 # f3 = Zoofood.create(zoo_id: Zoo.last.id, food_id: Food.find_by(name: "Walmart Meats").id) 
-
-
-
-
 # turn_choices = ["feed tiger", "sell tiger", "showcase a tiger", "buy food"]
 # turn_choice = $prompt.select("Options:", turn_choices)
 
-showcase_tiger 
+
+entry_screen

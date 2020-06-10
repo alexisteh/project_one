@@ -1,11 +1,11 @@
 require_relative '../config/environment.rb'
 require 'pry'
 
-#blank tigers before buying have bought = false and alive = true 
-#blank tigers after buying have bought = true, alive = true, and still have time_born = nil  
-#living tigers in zoo have bought = true and alive = true 
-#dead tigers in zoo have bought = true and alive = false
-#sold tigers have bought = false and alive = false 
+#blank tigers before buying: bought = false, alive = true, time_born = nil
+#blank tigers after buying: bought = true, alive = true, time_born = nil  
+#living tigers in zoo: bought = true, alive = true, time_born != nil
+#dead tigers in zoo: bought = true, alive = false, time_born != nil
+#sold tigers: bought = false, alive = nil, time_born != nil
 
 $prompt = TTY::Prompt.new 
 
@@ -116,7 +116,7 @@ def sell_tiger
             Zoo.last.update_attribute(:money, resulting_money)
             Zoo.last.save 
             tiger_object.update_attribute(:bought, false) 
-            tiger_object.update_attribute(:alive, false) 
+            tiger_object.update_attribute(:alive, nil) 
             puts "You just sold #{tiger_chosen.join(" ")} for #{sell_price}! Say goodbye to your tiger!"
             game_run_method 
         elsif health <= 50
@@ -214,9 +214,7 @@ f3 = Zoofood.create(zoo_id: Zoo.last.id, food_id: Food.find_by(name: "Beef").id)
 f3 = Zoofood.create(zoo_id: Zoo.last.id, food_id: Food.find_by(name: "Beef").id) 
 f3 = Zoofood.create(zoo_id: Zoo.last.id, food_id: Food.find_by(name: "Walmart Meats").id) 
 
-buy_tiger
-feed_tiger 
-
+sell_tiger
 
 
 

@@ -24,12 +24,12 @@ ActiveRecord::Schema.define(version: 2020_06_08_232212) do
 
   create_table "tigers", force: :cascade do |t|
     t.string "name"
-    t.integer "price"
     t.string "breed"
+    t.integer "price"
     t.integer "health"
     t.datetime "time_born"
-    t.boolean "alive?", default: true
-    t.boolean "bought?", default: false
+    t.boolean "alive", default: true
+    t.boolean "bought", default: false
     t.integer "zoo_id"
   end
 
@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 2020_06_08_232212) do
 
   create_table "zookeepers", force: :cascade do |t|
     t.string "name"
-    t.boolean "alive?"
+    t.boolean "alive"
   end
 
   create_table "zoos", force: :cascade do |t|

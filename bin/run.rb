@@ -3,6 +3,35 @@ require 'pry'
 
 $prompt = TTY::Prompt.new 
 
+def opening_image 
+    puts <<-'EOF'
+    ---------::::------  --::--:-:`    -+sssyyys:`    :/://:-://::::/+.  `+/++++oooooo+:                  .:///////`:++/+ooo+..--:--:---  ...------`.-:-----.    ./sssyyys/`                 
+    /MMMMMMMMMMMMMMMMMMN` oMNmMNNMd.  /dNdy:yyoshNNo   :NMNMMMmNMMNmNMMh   /MMMNNMNMMNNMMNo`               .mMNmNMMo -mMNNmMN/ .dMmMNNMMs .dMNmMMMMd`/MNNNNMm.  :dNdy/sysohmNo`               
+    /MNNNMNMMMMMMMNMMMMN`  hMymMMM.  -MNymhsmNdhs/oMs   yMNMNNMMMNNmNNMh    dMdmmmmNmNMMMNMy                oMNdNMN`  dMmMMM/   .MNyMMMh   .MNmNmmMo  dMNNNM:  .MNymhomNmhs/+My               
+    /MMMMMNMMmNMMMmMMNMN`  yMmMMmN   hMmNmMMysNNmhdMN`  sMMMMMNyyyNNhhMh    hMmddMmyhMNhNmMy`               +MmyMMm` /MNNMNs    `NNNMNNo   `MNNmddMd  hMNmNM-  yMmNmMMysmNmhdMN`              
+    /MNMMo`MMMMMMh dMMMN`  +MMNNMm   mMhhmMy  oMhhmMh   sMmNdNm   dMNMMd    dNddhMy  /MMMMMM.               +MddNMN` mMmMMN.     dMNNNMo   `MmmdddMM- hMmNNM.  dMdydMh  /MhhdNm               
+    +MMMMo`MMMMMMh dMMNN`  oMNMNMN   mMmNNMs  +Ms`.Nd   sMMMMMm   mMmmMd    dMmhNMy  -MMNMMM.               sMNNNMN`+MNNNMs      mMNMNMo   `MNNmddmMh dMymmM-  dMmNmMy  :My`.mm               
+    +MMMM+`MMMMNMy mMNMN`  oMMMMMN   NNNNmMs  /MNsyMd   sMMNmMN   mMMMMm    hMhdhMy  :MMNMMM.               sMNdNMN`mMMNMd`      mMMMMMs   `MmmmddmNM.hMddmM:  dNNNmMy  -MNsyNm               
+    +MMNM/`MMNMNMy mMMMN`  oMMMNMN`  NNNNMMs  oMNNmMy   sMmNdmN   mMMNMh    hMmNmMh  -MMdmNM-               +MNmmMN/MMMMN`       mMMMMMs   `MMNNdmdmMoyMmNmM-  dNNNMMy  +MNNmMd               
+    oMMMM+`MMmNMMs NMmMm`  oMNMNMN   mMNmMMo  .sdMMMh   sMNNNMd   `:smmh    hMMmMMd  -MmNNNM:               oMMMNMMMMMMMo        mMNMmMo    MMMMMMMMMNmMNMNM:  hMNmMMs  `odNMMd               
+    oMMMM/`MNmhNMs mMMMN`  +MMNMMN   NMMMMMo `   `/yo   sMMMMMh    :- -:    hMMMMMh  :MNMMMM.               oMMmMMMMMNMMo        dMMNMMo   `MMMNMNMNdNMMNMMM:  dMMMMMs `   `/yy               
+    oMNy- `MMNNmMs .+hNm   +MMMMMN   NMMMMMo omo-       sMMNMMMddmNMo       hMmmMMd+omNNNMMd                oMmNNNMMNNMMm`       dMMMMMo   `MMNNNMNMNNMMNNMM:  dMMMMMs +ms:`                  
+     `    `MNdddMs     -   oMMNmMm   MMMMMM+  hMMNs:    sMNMMMMNMNMMo       dMmmmmNMNNMhNm/`                sMNmNMMMNMmMM:       mMNNNMo    MMMNmysho--:mmMM-  mMMMMMo  yMMNy:`               
+          .MMNmmMs         oMMNdMm  `MMMMMMo  sMMMmMNo  yMmNNMNddmNMo       hMNNNNMMNMNmMMy.                sMNNmNMMMNMMMs       mMNNmMo    MMMMMddMNNNNNNMM- `NMMMMMs  oMMMmMNs              
+          .MNmNNMs         oMMMNMd   MMNNMMo  sMMMMMN.  yMNNMMd    .- /s`   hMdhmMh-:dMdNMMd                oMNNNNNNNNNmMm       mMNMMM+   `MMNMMhsMMNNMNNMM.  mMNNMMs  +MMNMMM-              
+          .MNdmNMo         oMMMNMm  `MMNNNMs  oMMNNNN`  yMNNNMm    :sNMM`   dMNmMMh  :MNmdMm`               sMMMNNMMNMNNMM:      mMMMNM+   .MMMMMd.MMNNmdmMN.  mMNNNMy  +MMNMNN`              
+          .MMdNMM+         +MdMNMm   MMdNmMs  oMMNmMN   yMhdNMh   dMMNMM`   dMNmNMh  /MmmmMm                sMMMMMMMNNNMMMy      dNdMNM+   .MMNMMh`mMNmNmNNN`  mMmNmMy  +MMMmNN`              
+          .MNmNmM+         +MMNNMm   MMmNmMs  oMMNMMm   yMMNhMh   mMMMMM`   hMddNMy  :MNNMMm                oMMmNMMhsMNNMMN`     dMMNNM+   .MNMmMh yMdmmmNMN`  mMmNmMy  +MMNMMN               
+          -MNMmmMo         +MMdmMm  `MMmNNMs  sMNMNMm   yMNmmMh   mMmMMM`   dMMNmMh  /MNMNNm`               sMMdsNm`.MNMMMM/     dMMhMMo   `MNNdMh -Ms://smN` `NMmNNMs  +MNMNMN               
+          -MNNNMMo         sMNNmMd  .MMMNNMs  sMNNNMm   yMMMMNd   mMmMMM`   dNdhNMy  :MmmmNm`               oMNddMd  dMMMMMy    `mMMNmM+   `MNmMMh `Nd/:-+NN` `NMMNNMy  oMNNNMN               
+          :MMdNMMo         oMMNNMd  `MNmNNMd..dMNmMNm   yMMmNMh   NMmmNM.   dMNdMMs  /MhhdMN`               sMMNMMm  +MMMMMN`    mMMmMM+   .MMmmMh  hMmmmNMm  `NNmNNNd..dMNmMNN               
+          :MNNdNMo         yMMNMMN   mMNNmmNMMNmmmMMm   hMmymMNsyyMNNMMM.   dNdmNMy  /MhdmMN`               sMNmNMN` .MMNmMM/   `MMMNMMo   .MMmNMh  +MNdmNMm   dMNNmmNMMMmmmMMN               
+          oMNmhNM+         hMMNNMN`  /MMNNddmhdNmMNMm   dMdNmmmmdNNdNmMM.   dNhmmMs  +MmmNMm`               yMyddNM. `NMNNNMd   .MMMNNMs   :MMmNMd  :MMmNmNN`  -NMNNmdmhdNmMNMN               
+         :mMMNNMMo`       -NMNMNNMo   -smMNMNmMMMMyNd  /MNNNNNNNMNMNNNNM`  /MMNNNMm.`dMMNmNMo`             .mMNMmMMs `mMMNMMMo  oMNMMmMN- `dMMNMMM: +MmmNmNMo   .smNNMNNMMMMhmm               
+         +ssooooos/       /++oooo++.     `.........`` `+ooo++++oooo+++++   ////////-.///:::::`             +ooosoooo./ooo+++++.`+++ooo++/  ://////:`///:::---      `.........``            
+    EOF
+end 
+
 def opening_message 
     input = $prompt.yes?("Do you want to own tigers?")
     if input == true 
@@ -73,11 +102,12 @@ end
 def buy_food 
     choices = Food.all.map{ |food| food.name }
     food_choice = $prompt.select("Which food will you feed your tiger today?", choices)
-    price = Food.all.find_by(name: food_choice).price  
+    price = Food.all.find_by(name: food_choice).price 
+    food_final = Food.all.find_by(name: food_choice)
 
     if Zoo.last.money >= price 
         puts "You just bought #{food_choice}!" 
-        Zoofood.create(zoo_id: Zoo.last.id, food_id: Food.all.find_by(name: food_choice).id) 
+        Zoofood.create(zoo_id: Zoo.last.id, food_id: food_final.id) 
         resulting_money = Zoo.last.money - price 
         Zoo.last.update_attribute(:money, resulting_money)
         game_run_method
@@ -160,8 +190,6 @@ def feed_tiger
     game_run_method 
 
 end 
-
-
 
 
 Zookeeper.create(name: "Bob", alive?: true)

@@ -6,8 +6,8 @@ class CreateTigers < ActiveRecord::Migration[5.2]
       t.string :breed 
       t.integer :health 
       t.datetime :time_born  
-      t.boolean :alive?, default: :true 
-      t.boolean :bought?, default: :false 
+      t.boolean :alive, default: :true 
+      t.boolean :bought, default: :false 
       t.integer :zoo_id 
     end 
   end

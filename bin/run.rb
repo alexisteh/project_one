@@ -20,10 +20,15 @@ def run
     Interface.opening_message 
 end 
 
+def carole_baskin 
+    pid = fork{ exec 'afplay', lib/carole-baskin.mp3} 
+end
+
+def joe_exotic 
+    pid = fork{ exec 'afplay', lib/joe-exotic.mp3}
+end 
+
 run 
-
-
-# Interface.opening_message 
 # def opening_message 
 #     #razzle dazzle letters 
 #     input = $prompt.yes?("Do you want to own tigers?".colorize(:cyan))

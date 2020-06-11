@@ -1,4 +1,31 @@
 class Interface
+
+    def self.opening_display 
+        puts <<-'EOF'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+        `////+//+++++////: -+++//++:   `+yhyyhhs/    +++oo/+oo+++oo.  /oosssssssss:`              `+oooooo-:ssossss.:/++/+++- :///////--++////-   .+yhyyhhs:               
+        -MMMNMMMMMMMMMMMMh `hMdNNMm-  ymdy:shossdm:  -MmNMMmMMNdmMMo  `dMNNNNMMMNNMN/              oMmmmMy `dMNNMN- `dNdNNMd. /MNmNNMm`.NNNmMd` `hmds-yssssmd.             
+        -MNMMMMNNMMMNNMMMd  /MdNNNo  +NmmNdNMNhhsmN   mMMMNMMMMMNNMo   sMdmmmNNNMMMMM-             :MNhMM/ `NNNMM:   +MdNNN/   dNNmmNm  hNmNM+  sNmmNdNMNhysNd             
+        -MMMM+dMMMMMoyMMMd  -MMNMM+  hMdmNN-`yMmhNM`  mNNmNd`./MddMo   oMhdmN-.sNdNMd-             -MmdMM/ sMmMNs    :MMNMM:   dNddmmM: dMmmM+  mMdmNm.`dMmdNm             
+        -MNMM`yMMMMM:+MMMd  .MNMNM+  dNdmMm  oN:-hm   mMMMMd  /MNNMs   sNmhNM` -MMMMM+             :MmmNM/.NNmMM.    -MNMNM:   dNNmdmMh dNhmM+  NNdmMh  ym--mh             
+        -MMMN`yMMMNM-oMNMh  -MMMMMo  dNNNNm  +MhsmN   mMNmNd  /MMMMy   sMddmM. -MMNMM/             /MNmNM/yMMNM+     :MMMNM/   dmmdddMM-hNNdMo  NNNNMy  sMysNd             
+        -MMNN yMNNMM-oMMMh  -MMMMMo  dNNNMm  sMNNNm   mMmmmd  /MNMMo   oMNNNM. -MNdmM+             -MMdNMoNMMMs      :MMMMM/   dMNNdmdMsyNNmM+  NmNMMh  hMNNMh             
+        :MMMN`hMmNMM.sMmMh  .MNMNM+  dMNNMd  `+yNMm   mMNNMy   `/ymo   sMMNMM. -MmMNMo             /MMMMMMMMMM.      -MNMNM:   dMMNNMMMNNMNNMo  NMNNMy  .ohNMh             
+        /MMMy yNmmNM./NMMh  `MMMMM+  dMMMMm /-   :/   mMMMMh--:oo  `   oMNMMM. +MMMMM:             :MmmMNMMNMM:      -MMNMM/   dMMNMNMmNMMNMMo  NMMMMy /-  `::             
+        .s+.  hMmmmM.  -oo  -MMNNM+  mMMMMd .mmy:     mMNMMMMMMMh      oMmmmNmmNNhNNs              /MNmNMMNNmMh      :MMNNM:   dMNNdyhyoohNNMo  MMMMMs :Nms-               
+              hMmdNM.       .MMNNM+  mMMMMd  hMMMNy:  mMNNMMNMMMy      sMNNNNMNMMNMs`              /MMNmNMMNMMM`     -MMNNM:   dMMNMmMmdhhNNM+ `MMMMMs  mMMMNs-            
+              hNdNNM.       -MMNNM/  NMMMMd  sMMNMM/ `NNNMMh``.:/ -/   oMmdNMoomNmMMN`             /MNmNMMNNNNM/     :MMNNM-   dNNMM+MMNNMNMM+ `MMMMMy  hMMNMN-            
+              hNdNMM`       -MMMNM/  mMNNMm  sMMMNM`  mMNNMh   .omMd   sMmmMM. :MNdmM-             /MMMNNMNMNmMh     :MMMNM:   mMMMM/dMNNmdNM: `MMNNMy  hMNMNm             
+              hMmNMN`       .MmMNM/  mNdNNm  sMNmNM`  NmhmMy  /MMNMd   sMNNMM. :MmmMM.             /MMMMMMNNNMMM`    -MmMNM:   mMNMM:sMNmmNNM:  MNdNMh  dMNmNm             
+              dMmmmN`       .MMNNM/  mMmmMm  sMMMMM  `NMNdMy  /MMMMd   oMmmNM. :MNMNM.             /MMhmMd:MNNNM+    -MMNMM:   mMMmM:-MhddmNM- `MNmmMy  dMNMMd             
+              dNMNMN`       -MMdmM/ `NMMNMm  sMMMMN  `NMNNMh  /MmMMd   sNNdNM` :MNMNM-             /MMdmM- mMMMMd    :MMdNM:   dNmmM: mh`.:yM- .MNMNMy  hMMNMd             
+              mMdNMM`       -MMNNM: `NNmNMm  hMmmMM`  mMNNNh  +MmNMm   sMmdMM` :MdhmM-             /MNNMM: oMMMMM.   :MMNNM-   dMmNM: sNdhhdM- .MNNNMh  mMdNMd             
+              mMNNMN`       :MMNMM+  mNNNdMmdNmNMMN  `NMhmMd//yMNNNm   sNdmMM` /MhmNM-             /MNmNM: -MMNNMo   /MMNMM:   mMmNM- /MNmNNM.  NNNNdMdmNNNMNd             
+             `NNmhNN`       /MMNNMo  /MNNNdmdmNmMMM` `MNdmmmmmNmmNMm   sMddMN` /MhNNM-             +MhmmM+ `NMNNMm   +MMNNM/   NMNNM: .MMmNdM-  oMNNNdmdmNmMMd             
+            `sMMNNMN:      `hMNMmMm.  :ymNMNmMMMNhN  sMNNNNNMMNMNNNd  .mMNNNM/`hMMmNMy`           `hMNNNMm..NMMNMMs `dMNMmMd` +MMMMMh`/MmmNmMy`  /hmNMNNMMMddh             
+            .////////`     `/:////:.           ``   `////:://///:::-  .:------`---..-.`           -///////--////:::`./:///::. `------`---...`.            ``               
+                                                                                                                                                                                                                                                                                       
+        EOF
+    end 
     
     def self.opening_message 
         #razzle dazzle letters 
@@ -23,7 +50,7 @@ class Interface
             rows << [zoo.name, zookeeper_name, zoo.money] 
         end  
         highscores_table = Terminal::Table.new :title => "High Scores", :rows => rows
-        highscores_table.style = {:width => 200, :padding_left => 3, :border_x => "=", :border_i => "x"}
+        highscores_table.style = {:width => 100, :padding_left => 3, :border_x => "=", :border_i => "x"}
         puts highscores_table 
         choices = ["Play the game", "Leave the game"]
         $prompt.select("What would you like to do next?".colorize(:cyan), choices) do |c| 
@@ -81,7 +108,7 @@ class Interface
     
         choice = $prompt.select("What would you like to do?".colorize(:cyan) , choices) 
         if choice == "Buy a Tiger" 
-            Tiger.buy_tiger 
+            Tiger.buy_tiger
         elsif choice == "Sell a Tiger"
             Tiger.sell_tiger 
         elsif choice == "Feed a Tiger"
@@ -144,20 +171,41 @@ class Interface
         end 
     end 
 
+    def self.table_wraparound(array, line_number)
+        array.each_with_index.map do |element, index| 
+            if index % line_number == 0 && index != 0 
+                "\n#{element.name}" 
+            else element.name 
+            end 
+        end.join(", ")
+    end 
+
     def self.check_stats 
         current_money = Zoo.last.money 
-        current_tigers = Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id && tiger.alive == true}.map(&:name).join(", ") 
-        dead_tigers = Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id && tiger.alive == false}.map(&:name).join(", ")
-        sold_tigers = Tiger.all.select{|tiger| tiger.bought == false && tiger.zoo_id == Zoo.last.id && tiger.alive == nil}.map(&:name).join(", ")
+        current_tigers = self.table_wraparound(Tiger.available_tigers, 4) 
+
+        dead_tigers_array = Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id && tiger.alive == false}
+        dead_tigers = self.table_wraparound(dead_tigers_array, 4)
+
+        sold_tigers_array = Tiger.all.select{|tiger| tiger.bought == false && tiger.zoo_id == Zoo.last.id && tiger.alive == nil}
+        sold_tigers = self.table_wraparound(sold_tigers_array, 4)
+
         unique_foods = Zoo.last.foods.map(&:name).uniq 
-        current_food_supply = unique_foods.map do |food_name| 
+        current_food_supply_array = unique_foods.map do |food_name| 
             food_name + ": " + Zoo.last.foods.map(&:name).count(food_name).to_s 
+        end 
+        new_food = current_food_supply_array.each_with_index.map do |element, index| 
+            if index % 3 == 0 && index != 0 
+                "\n#{element}"
+            else element 
+            end 
         end.join(", ")
+        
         rows = [] 
         rows << ['Current Funds', current_money]
         rows << ['Your Tigers', current_tigers] 
         rows << ['Dead Tigers', dead_tigers]
-        rows << ['Your Food Supply', current_food_supply]
+        rows << ['Your Food Supply', new_food]
         zoo_stats_table = Terminal::Table.new :title => "Your Zoo Stats", :rows => rows
         zoo_stats_table.style = {:width => 100, :padding_left => 3, :border_x => "=", :border_i => "x"}
         puts zoo_stats_table 

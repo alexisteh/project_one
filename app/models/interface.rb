@@ -78,13 +78,12 @@ class Interface
         puts "You, #{Zookeeper.last.name}, are in charge of #{zoo_name} with starting funds of $#{start_money}!"
         self.game_run_method 
     end 
-    
 
     def self.game_run_method
-        self.check_tigers_over_time  
-        self.check_stats
+        self.check_tigers_over_time  #gives tiger status messages and updates healths 
+        self.check_stats #prints zoo stats for reference on every round 
     
-        if Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id && tiger.alive == true} == [] 
+        if Tiger.available_tigers.length == 0 
             choices =  [
                 'Buy a Tiger',
                 {name: 'Sell a Tiger', disabled: '(You do not have a tiger to sell!)'},
@@ -124,31 +123,33 @@ class Interface
         end  
     end 
 
-    def self.check_tigers_over_time
-        existing_tigers = Tiger.all.select{|t| t.bought == true && t.zoo_id == Zoo.last.id && t.alive == true}
-        
-        if existing_tigers.length == 0 
-            return 
+    def self.time_considered(tiger_object)
+        #helper method for check_tigers_over_time to decide time born / fed to compare
+        if tiger_object.time_last_fed == nil 
+            return tiger_object.time_born 
+        else return time_considered = tiger_object.time_last_fed 
         end 
+    end 
 
+    def self.check_tigers_over_time        
+        if Tiger.available_tigers.length == 0  
+            return #no tigers to update statuses for, returns to previous self.game_run_method 
+        end 
         starved_tigers = [] 
         hungry_tigers = [] 
         dead_tigers = [] 
 
-        existing_tigers.each do |tiger_object|
-            if tiger_object.time_last_fed == nil 
-                time_considered = tiger_object.time_born 
-            else time_considered = tiger_object.time_last_fed 
-            end 
-
-            if Time.now - time_considered > 240.0 
-                resulting_health = tiger_object.health - 20 
+        Tiger.available_tigers.each do |tiger_object|
+            #check if tiger was fed recently 
+            if Time.now - self.time_considered(tiger_object) > 240.0 
+                resulting_health = tiger_object.health - 25   
                 tiger_object.update_attribute(:health, resulting_health)
                 starved_tigers << tiger_object 
-            elsif Time.now - time_considered > 80.0
+            elsif Time.now - self.time_considered(tiger_object) > 80.0
                 hungry_tigers << tiger_object  
             end 
             
+            # check if tiger has negative health, or died 
             if tiger_object.health <= 0 
                 tiger_object.update_attribute(:health, 0) 
                 tiger_object.update_attribute(:alive, false)
@@ -160,6 +161,7 @@ class Interface
             end 
         end 
         
+        #prints tiger status messages 
         if starved_tigers != []  
             puts "Tigers are starving: #{starved_tigers.map(&:name).join(", ")}.".colorize(:red) 
         end 
@@ -172,6 +174,7 @@ class Interface
     end 
 
     def self.table_wraparound(array, line_number)
+        #helper method for wrapping text in self.check_stats 
         array.each_with_index.map do |element, index| 
             if index % line_number == 0 && index != 0 
                 "\n#{element.name}" 
@@ -181,6 +184,7 @@ class Interface
     end 
 
     def self.check_stats 
+        #prints zoo stats table for reference in every game turn 
         current_money = Zoo.last.money 
         current_tigers = self.table_wraparound(Tiger.available_tigers, 4) 
 
@@ -205,7 +209,7 @@ class Interface
         rows << ['Current Funds', current_money]
         rows << ['Your Tigers', current_tigers] 
         rows << ['Dead Tigers', dead_tigers]
-        rows << ['Your Food Supply', new_food]
+        rows << ['Your Food Supply', new_food] 
         zoo_stats_table = Terminal::Table.new :title => "Your Zoo Stats", :rows => rows
         zoo_stats_table.style = {:width => 100, :padding_left => 3, :border_x => "=", :border_i => "x"}
         puts zoo_stats_table 
@@ -213,35 +217,42 @@ class Interface
 
 
     def self.check_health 
+        #gives full health and status updates table for all tigers 
 
+        #includes all bought tigers, dead or not. excludes sold tigers. 
         existing_tigers = Tiger.all.select{|tiger| tiger.bought == true && tiger.zoo_id == Zoo.last.id} 
         
         if existing_tigers.length == 0  
-            puts "You do not have any existing Tigers!".colorize(:red)
+            puts "You do not have any tigers!".colorize(:red)
             self.game_run_method 
         else 
             rows = [] 
-            existing_tigers.each do |tiger_object| 
-    
-                if tiger_object.time_last_fed == nil 
-                    time_considered = tiger_object.time_born 
-                else time_considered = tiger_object.time_last_fed 
-                end 
+            existing_tigers.each do |tiger_object|
     
                 if tiger_object.alive == false 
                     living_status = "dead".colorize(:red)
                     feeding_status = "–".colorize(:red)
                 else 
                     living_status = "alive".colorize(:green)
-                    if Time.now - time_considered > 240.0 
+                    if Time.now - self.time_considered(tiger_object) > 240.0 
                         feeding_status = "Needs to be fed!".colorize(:red)
-                    elsif Time.now - time_considered > 80.0 
+                    elsif Time.now - self.time_considered(tiger_object) > 80.0 
                         feeding_status = "Needs to be fed soon!".colorize(:yellow)
                     else feeding_status = "Well-nourished!".colorize(:green)
                     end 
                 end 
-                rows << [tiger_object.name, living_status, tiger_object.health, feeding_status]  
+
+                #gives varying color based on health values 
+                if tiger_object.health > 100 
+                    health_number = "#{tiger_object.health}".colorize(:green) 
+                elsif tiger_object.health >50 
+                    health_number = "#{tiger_object.health}".colorize(:yellow)
+                else 
+                    health_number = "#{tiger_object.health}".colorize(:red)
+                end   
+                rows << [tiger_object.name, living_status, health_number, feeding_status]  
             end 
+
             tiger_stats_table = Terminal::Table.new :title => "Your Tiger Stats".colorize(:pink), :rows => rows 
             tiger_stats_table.style = {:width => 100, :padding_left => 3, :border_x => "=", :border_i => "x"}
             puts tiger_stats_table

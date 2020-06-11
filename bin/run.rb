@@ -29,8 +29,6 @@ def joe_exotic
 end 
 
 run 
-# def opening_message 
-#     #razzle dazzle letters 
 #     input = $prompt.yes?("Do you want to own tigers?".colorize(:cyan))
 #     if input == true 
 #         choices = ["Start your Tiger zoo!", "View Highscores"]

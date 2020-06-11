@@ -126,7 +126,7 @@ class Tiger < ActiveRecord::Base
         money_made = (price*2*(0.5+(health/400.0))*(0.75 + 0.25*(rand))).to_i  #provides randomness in money made
         resulting_money = Zoo.last.money + money_made 
         Zoo.last.update_attribute(:money, resulting_money)  
-        updated_health = health - (60*(0.75 + 0.25*(rand))).to_i  #provides randomness in health lost by tiger 
+        updated_health = (health - (60*(0.75 + 0.25*(rand))) ).to_i  #provides randomness in health lost by tiger 
         self.update_attribute(:health, updated_health) 
         if updated_health <= 0 
             puts "You made #{money_made}, but #{self.name} was hurt so badly it died!".colorize(:red)

@@ -10,25 +10,23 @@ require 'terminal-table'
 #sold tigers: bought = false, alive = nil, time_born != nil
 
 #things to do:
-    #health colour changes in check_health depending on ranges 
     #colorise high scores 
     #terminal table wraparound 
-    
+
 $prompt = TTY::Prompt.new 
 
 def run 
     Interface.opening_message 
 end 
 
-def carole_baskin 
-    pid = fork{ exec 'afplay', lib/carole-baskin.mp3} 
-end
-
-def joe_exotic 
-    pid = fork{ exec 'afplay', lib/joe-exotic.mp3}
+def play_music(file)
+    pid = spawn( 'afplay', file )
 end 
 
-run 
+
+play_music('../lib/joe-exotic.mp3')
+
+
 #     input = $prompt.yes?("Do you want to own tigers?".colorize(:cyan))
 #     if input == true 
 #         choices = ["Start your Tiger zoo!", "View Highscores"]

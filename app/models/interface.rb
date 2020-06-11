@@ -1,30 +1,19 @@
 class Interface
 
     def self.opening_display 
-        puts <<-'EOF'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-        `////+//+++++////: -+++//++:   `+yhyyhhs/    +++oo/+oo+++oo.  /oosssssssss:`              `+oooooo-:ssossss.:/++/+++- :///////--++////-   .+yhyyhhs:               
-        -MMMNMMMMMMMMMMMMh `hMdNNMm-  ymdy:shossdm:  -MmNMMmMMNdmMMo  `dMNNNNMMMNNMN/              oMmmmMy `dMNNMN- `dNdNNMd. /MNmNNMm`.NNNmMd` `hmds-yssssmd.             
-        -MNMMMMNNMMMNNMMMd  /MdNNNo  +NmmNdNMNhhsmN   mMMMNMMMMMNNMo   sMdmmmNNNMMMMM-             :MNhMM/ `NNNMM:   +MdNNN/   dNNmmNm  hNmNM+  sNmmNdNMNhysNd             
-        -MMMM+dMMMMMoyMMMd  -MMNMM+  hMdmNN-`yMmhNM`  mNNmNd`./MddMo   oMhdmN-.sNdNMd-             -MmdMM/ sMmMNs    :MMNMM:   dNddmmM: dMmmM+  mMdmNm.`dMmdNm             
-        -MNMM`yMMMMM:+MMMd  .MNMNM+  dNdmMm  oN:-hm   mMMMMd  /MNNMs   sNmhNM` -MMMMM+             :MmmNM/.NNmMM.    -MNMNM:   dNNmdmMh dNhmM+  NNdmMh  ym--mh             
-        -MMMN`yMMMNM-oMNMh  -MMMMMo  dNNNNm  +MhsmN   mMNmNd  /MMMMy   sMddmM. -MMNMM/             /MNmNM/yMMNM+     :MMMNM/   dmmdddMM-hNNdMo  NNNNMy  sMysNd             
-        -MMNN yMNNMM-oMMMh  -MMMMMo  dNNNMm  sMNNNm   mMmmmd  /MNMMo   oMNNNM. -MNdmM+             -MMdNMoNMMMs      :MMMMM/   dMNNdmdMsyNNmM+  NmNMMh  hMNNMh             
-        :MMMN`hMmNMM.sMmMh  .MNMNM+  dMNNMd  `+yNMm   mMNNMy   `/ymo   sMMNMM. -MmMNMo             /MMMMMMMMMM.      -MNMNM:   dMMNNMMMNNMNNMo  NMNNMy  .ohNMh             
-        /MMMy yNmmNM./NMMh  `MMMMM+  dMMMMm /-   :/   mMMMMh--:oo  `   oMNMMM. +MMMMM:             :MmmMNMMNMM:      -MMNMM/   dMMNMNMmNMMNMMo  NMMMMy /-  `::             
-        .s+.  hMmmmM.  -oo  -MMNNM+  mMMMMd .mmy:     mMNMMMMMMMh      oMmmmNmmNNhNNs              /MNmNMMNNmMh      :MMNNM:   dMNNdyhyoohNNMo  MMMMMs :Nms-               
-              hMmdNM.       .MMNNM+  mMMMMd  hMMMNy:  mMNNMMNMMMy      sMNNNNMNMMNMs`              /MMNmNMMNMMM`     -MMNNM:   dMMNMmMmdhhNNM+ `MMMMMs  mMMMNs-            
-              hNdNNM.       -MMNNM/  NMMMMd  sMMNMM/ `NNNMMh``.:/ -/   oMmdNMoomNmMMN`             /MNmNMMNNNNM/     :MMNNM-   dNNMM+MMNNMNMM+ `MMMMMy  hMMNMN-            
-              hNdNMM`       -MMMNM/  mMNNMm  sMMMNM`  mMNNMh   .omMd   sMmmMM. :MNdmM-             /MMMNNMNMNmMh     :MMMNM:   mMMMM/dMNNmdNM: `MMNNMy  hMNMNm             
-              hMmNMN`       .MmMNM/  mNdNNm  sMNmNM`  NmhmMy  /MMNMd   sMNNMM. :MmmMM.             /MMMMMMNNNMMM`    -MmMNM:   mMNMM:sMNmmNNM:  MNdNMh  dMNmNm             
-              dMmmmN`       .MMNNM/  mMmmMm  sMMMMM  `NMNdMy  /MMMMd   oMmmNM. :MNMNM.             /MMhmMd:MNNNM+    -MMNMM:   mMMmM:-MhddmNM- `MNmmMy  dMNMMd             
-              dNMNMN`       -MMdmM/ `NMMNMm  sMMMMN  `NMNNMh  /MmMMd   sNNdNM` :MNMNM-             /MMdmM- mMMMMd    :MMdNM:   dNmmM: mh`.:yM- .MNMNMy  hMMNMd             
-              mMdNMM`       -MMNNM: `NNmNMm  hMmmMM`  mMNNNh  +MmNMm   sMmdMM` :MdhmM-             /MNNMM: oMMMMM.   :MMNNM-   dMmNM: sNdhhdM- .MNNNMh  mMdNMd             
-              mMNNMN`       :MMNMM+  mNNNdMmdNmNMMN  `NMhmMd//yMNNNm   sNdmMM` /MhmNM-             /MNmNM: -MMNNMo   /MMNMM:   mMmNM- /MNmNNM.  NNNNdMdmNNNMNd             
-             `NNmhNN`       /MMNNMo  /MNNNdmdmNmMMM` `MNdmmmmmNmmNMm   sMddMN` /MhNNM-             +MhmmM+ `NMNNMm   +MMNNM/   NMNNM: .MMmNdM-  oMNNNdmdmNmMMd             
-            `sMMNNMN:      `hMNMmMm.  :ymNMNmMMMNhN  sMNNNNNMMNMNNNd  .mMNNNM/`hMMmNMy`           `hMNNNMm..NMMNMMs `dMNMmMd` +MMMMMh`/MmmNmMy`  /hmNMNNMMMddh             
-            .////////`     `/:////:.           ``   `////:://///:::-  .:------`---..-.`           -///////--////:::`./:///::. `------`---...`.            ``               
-                                                                                                                                                                                                                                                                                       
-        EOF
+        puts "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+        
+    ███      ▄█     ▄██████▄     ▄████████    ▄████████         ▄█   ▄█▄  ▄█  ███▄▄▄▄      ▄██████▄       
+    ▀█████████▄ ███    ███    ███   ███    ███   ███    ███        ███ ▄███▀ ███  ███▀▀▀██▄   ███    ███      
+       ▀███▀▀██ ███▌   ███    █▀    ███    █▀    ███    ███        ███▐██▀   ███▌ ███   ███   ███    █▀       
+        ███   ▀ ███▌  ▄███         ▄███▄▄▄      ▄███▄▄▄▄██▀       ▄█████▀    ███▌ ███   ███  ▄███             
+        ███     ███▌ ▀▀███ ████▄  ▀▀███▀▀▀     ▀▀███▀▀▀▀▀        ▀▀█████▄    ███▌ ███   ███ ▀▀███ ████▄       
+        ███     ███    ███    ███   ███    █▄  ▀███████████        ███▐██▄   ███  ███   ███   ███    ███      
+        ███     ███    ███    ███   ███    ███   ███    ███        ███ ▀███▄ ███  ███   ███   ███    ███      
+       ▄████▀   █▀     ████████▀    ██████████   ███    ███        ███   ▀█▀ █▀    ▀█   █▀    ████████▀       
+                                                 ███    ███        ▀                                          
+                                                                                                                                                                                                                                                                                        
+        \n".colorize(:light_red)
     end 
     
     def self.opening_message 
@@ -41,7 +30,7 @@ class Interface
             exit
         end 
     end 
-
+    
     def self.show_highscores
         top_games = Zoo.order(:money).last(5).reverse 
         rows = [] 
@@ -82,6 +71,7 @@ class Interface
     def self.game_run_method
         self.check_tigers_over_time  #gives tiger status messages and updates healths 
         self.check_stats #prints zoo stats for reference on every round 
+        self.fun_message #prints fun random message 
     
         if Tiger.available_tigers.length == 0 
             choices =  [
@@ -141,11 +131,11 @@ class Interface
 
         Tiger.available_tigers.each do |tiger_object|
             #check if tiger was fed recently 
-            if Time.now - self.time_considered(tiger_object) > 240.0 
-                resulting_health = tiger_object.health - 25   
+            if Time.now - self.time_considered(tiger_object) > 120.0 
+                resulting_health = tiger_object.health - 25  
                 tiger_object.update_attribute(:health, resulting_health)
                 starved_tigers << tiger_object 
-            elsif Time.now - self.time_considered(tiger_object) > 80.0
+            elsif Time.now - self.time_considered(tiger_object) > 60.0 
                 hungry_tigers << tiger_object  
             end 
             
@@ -259,7 +249,6 @@ class Interface
             self.game_run_method
         end 
     end 
-     
 
     def self.exit_game 
         puts "Thanks for playing Tiger King!".colorize(:yellow) 
@@ -276,7 +265,37 @@ class Interface
         puts "Bye!".colorize(:red) 
         exit 
     end 
-    
 
-end 
-
+    def self.fun_message 
+        #prints fun random message every game turn 
+        if Tiger.available_tigers == [] 
+            messages = ["You need to buy some tigers!".colorize(:pink),
+                "You don't have any tigers!".colorize(:pink)     
+            ]
+        else 
+            messages = ["#{Tiger.available_tigers.sample.name} yawns lazily!".colorize(:pink), 
+                "#{Tiger.available_tigers.sample.name} is sleeping soundly!".colorize(:pink),
+                "Your tiger #{Tiger.available_tigers.sample.name} looks especially fluffy today!".colorize(:pink), 
+                "#{Tiger.available_tigers.sample.name} is giving off a funky smell!".colorize(:pink), 
+                "Your #{Tiger.available_tigers.sample.name} is prancing about the enclosure!".colorize(:pink), 
+                "#{Tiger.available_tigers.sample.name} is going for a dip in the pool!".colorize(:pink), 
+                "#{Tiger.available_tigers.sample.name} is melancholy today!".colorize(:pink), 
+                "#{Tiger.available_tigers.sample.name} yearns for the wilderness!".colorize(:pink), 
+                "#{Tiger.available_tigers.sample.name} has been made gaunt and feeble by captivity!".colorize(:pink),
+                "#{Tiger.available_tigers.sample.name} has taken a liking to you!".colorize(:pink),  
+                "It's sweltering today at #{Zoo.last.name}!".colorize(:pink), 
+                "Look out, #{Zookeeper.last.name}! There's a tiger behind you!".colorize(:pink) 
+            ] 
+        end 
+        if Tiger.all.select{|tiger| tiger.name == "Floyd" && tiger.zoo_id == Zoo.last.id } == [ ] 
+            messages << "Rumours are circulating of a majestic tiger named Floyd. I heard he's pretty hard to pin down, though.".colorize(:pink)
+            messages << "Have you gotten Floyd yet?".colorize(:pink)
+        end 
+        if Zoo.last.money <= 500 
+            messages = ["#{Zoo.last.name} seems to be in some financial trouble!".colorize(:pink),
+                "You need to make more money, #{Zookeeper.last.name}!".colorize(:pink) 
+            ] 
+        end 
+        puts messages.sample 
+    end 
+end

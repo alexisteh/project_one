@@ -78,7 +78,7 @@ t6p1 = FoodPreference.create(tiger_id: t6.id ,food_id: f2.id)
 t6p2 = FoodPreference.create(tiger_id: t6.id ,food_id: f5.id)
 t6p3 = FoodPreference.create(tiger_id: t6.id ,food_id: f3.id)
 #tiger7 foodprefs 
-t7p1 = FoodPreference.create(tiger_id: t7.id ,food_id: f1.id)
+t7p1 = FoodPreference.create(tiger_id: t7.id ,food_id: f5.id)
 t7p2 = FoodPreference.create(tiger_id: t7.id ,food_id: f2.id)
 #tiger8 foodprefs
 t8p3 = FoodPreference.create(tiger_id: t8.id ,food_id: f5.id)
@@ -91,12 +91,12 @@ t10p1 = FoodPreference.create(tiger_id: t10.id ,food_id: f1.id)
 # tiger11 foodprefs
 t11p1 = FoodPreference.create(tiger_id: t11.id ,food_id: f3.id)
 # tiger12 foodprefs
-t12p1 = FoodPreference.create(tiger_id: t12.id ,food_id: f1.id)
+t12p1 = FoodPreference.create(tiger_id: t12.id ,food_id: f5.id)
 t12p4 = FoodPreference.create(tiger_id: t12.id ,food_id: f4.id)
 # tiger13 foodprefs
 t13p1 = FoodPreference.create(tiger_id: t13.id ,food_id: f1.id)
 t13p4 = FoodPreference.create(tiger_id: t13.id ,food_id: f4.id)
-t13p4 = FoodPreference.create(tiger_id: t13.id ,food_id: f2.id)
+t13p4 = FoodPreference.create(tiger_id: t13.id ,food_id: f5.id)
 # tiger14 foodprefs
 t14p1 = FoodPreference.create(tiger_id: t14.id ,food_id: f1.id)
 t14p4 = FoodPreference.create(tiger_id: t14.id ,food_id: f4.id)

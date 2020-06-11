@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 require_relative '../config/environment.rb'
+=======
+require_relative '../config/environment.rb' 
+require 'colorize'
+require 'tty-prompt'
+>>>>>>> alexis
 require 'pry'
 require 'terminal-table'
 
@@ -8,6 +14,7 @@ require 'terminal-table'
 #dead tigers in zoo: bought = true, alive = false, time_born != nil
 #sold tigers: bought = false, alive = nil, time_born != nil
 
+<<<<<<< HEAD
 $prompt = TTY::Prompt.new 
 
 def entry_screen 
@@ -348,3 +355,13 @@ end
 
 # turn_choices = ["feed tiger", "sell tiger", "showcase a tiger", "buy food"]
 # turn_choice = $prompt.select("Options:", turn_choices)
+=======
+
+$prompt = TTY::Prompt.new 
+
+def run 
+    Interface.opening_display  
+end 
+
+run 
+>>>>>>> alexis

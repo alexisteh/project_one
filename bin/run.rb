@@ -13,9 +13,7 @@ require 'terminal-table'
     #health colour changes in check_health depending on ranges 
     #colorise high scores 
     #terminal table wraparound 
-    #fix instance methods 
     
-
 $prompt = TTY::Prompt.new 
 
 def run 

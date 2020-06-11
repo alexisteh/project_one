@@ -5,6 +5,16 @@ class Tiger < ActiveRecord::Base
     has_many :foods, through: :food_preferences 
 
 
+    #helper method to find all living tigers in the zoo 
+    def self.tigers_alive_in_zoo 
+        available_tigers = self.all.select{|tiger| (tiger.bought == true) && (tiger.zoo_id == Zoo.last.id) && (tiger.alive == true)}
+        if available_tigers.length == 0 
+            puts "You have no tigers!".colorize(:red)
+            Interface.game_run_method
+        else 
+            return 
+    end 
+
     #helper method for buy_tiger, checks if blank tiger has been bought before 
     def self.tiger_allowed(tiger_object)
         already_bought_tigers = Tiger.all.select{|tiger| tiger.time_born != nil && tiger.zoo_id == Zoo.last.id}   
@@ -45,37 +55,33 @@ class Tiger < ActiveRecord::Base
 
 
     def self.sell_tiger 
-        available_tigers = self.all.select{|tiger| (tiger.bought == true) && (tiger.zoo_id == Zoo.last.id) && (tiger.alive == true)}
-        if available_tigers.length == 0 
-            puts "You have no tigers!".colorize(:red)
+        self.tigers_alive_in_zoo 
+
+        choices = available_tigers.map{|tiger| tiger.name + " (bought for #{tiger.price})"} 
+        choices << "[Go Back]" 
+        tiger_chosen = $prompt.select("Pick a tiger to sell!".colorize(:cyan), choices).split(" ")
+
+        if tiger_chosen == ["[Go", "Back]"]
+            Interface.game_run_method 
+        end 
+
+        tiger_chosen.pop(3)
+        tiger_object = self.all.find_by(name: tiger_chosen.join(" "), bought: true, zoo_id: Zoo.last.id, alive: true)
+        price = tiger_object.price 
+        health = tiger_object.health 
+
+        if health >= 50
+            sell_price = (price*((1+(health/200))*(1+0.5*(rand)))).to_i 
+            resulting_money = Zoo.last.money + sell_price  
+            Zoo.last.update_attribute(:money, resulting_money)
+            Zoo.last.save 
+            tiger_object.update_attribute(:bought, false) 
+            tiger_object.update_attribute(:alive, nil) 
+            puts "You just sold #{tiger_chosen.join(" ")} for #{sell_price}! Say goodbye to your tiger!".colorize(:red)
+            Interface.game_run_method 
+        elsif health <= 50
+            puts "This Tiger is too sick too sell!".colorize(:red) 
             Interface.game_run_method
-        else 
-            choices = available_tigers.map{|tiger| tiger.name + " (bought for #{tiger.price})"} 
-            choices << "[Go Back]"
-            tiger_chosen = $prompt.select("Pick a tiger to sell!".colorize(:cyan), choices).split(" ")
-
-            if tiger_chosen == ["[Go", "Back]"]
-                Interface.game_run_method 
-            end 
-
-            tiger_chosen.pop(3)
-            tiger_object = self.all.find_by(name: tiger_chosen.join(" "), bought: true, zoo_id: Zoo.last.id, alive: true)
-            price = tiger_object.price 
-            health = tiger_object.health 
-
-            if health >= 50
-                sell_price = (price*((1+(health/200))*(1+0.5*(rand)))).to_i 
-                resulting_money = Zoo.last.money + sell_price  
-                Zoo.last.update_attribute(:money, resulting_money)
-                Zoo.last.save 
-                tiger_object.update_attribute(:bought, false) 
-                tiger_object.update_attribute(:alive, nil) 
-                puts "You just sold #{tiger_chosen.join(" ")} for #{sell_price}! Say goodbye to your tiger!".colorize(:red)
-                Interface.game_run_method 
-            elsif health <= 50
-                puts "This Tiger is too sick too sell!".colorize(:red) 
-                Interface.game_run_method
-            end 
         end 
     end 
 

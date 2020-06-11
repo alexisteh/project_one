@@ -10,7 +10,7 @@
                                                  ███    ███        ▀                                          
                                                 
                                                  MURDER 
-                                                 MAYHEM                                                                         MADNESS                                                                                                                                         
+                                                 MAYHEM                                                                       MADNESS                                                                                                                                         
 TIGER KING SIMULATOR 
 
 Our project, a Ruby CLI, will simulate the characters, actions, and tigers found on the beloved Netflix Series "Tiger King: Murder, Mayhem and Madness" which took the world by storm. 
@@ -34,3 +34,10 @@ Best of luck in your zookeeping endeavors!
 
 #FREEJOEEXOTIC 
 
+
+
+in presentation 
+- show that selling tiger makes randomized money
+- show that showcasing tiger takes away from health 
+- show that showcasing tiger might kill tiger 
+- show that tiger have food preferences 

@@ -14,6 +14,7 @@ class Interface
                                                  ███    ███        ▀                                          
                                                                                                                                                                                                                                                                                         
         \n".colorize(:light_red)
+        self.opening_message
     end 
     
     def self.opening_message 
@@ -273,29 +274,29 @@ class Interface
                 "You don't have any tigers!".colorize(:pink)     
             ]
         else 
-            messages = ["#{Tiger.available_tigers.sample.name} yawns lazily!".colorize(:pink), 
-                "#{Tiger.available_tigers.sample.name} is sleeping soundly!".colorize(:pink),
-                "Your tiger #{Tiger.available_tigers.sample.name} looks especially fluffy today!".colorize(:pink), 
-                "#{Tiger.available_tigers.sample.name} is giving off a funky smell!".colorize(:pink), 
-                "Your #{Tiger.available_tigers.sample.name} is prancing about the enclosure!".colorize(:pink), 
-                "#{Tiger.available_tigers.sample.name} is going for a dip in the pool!".colorize(:pink), 
-                "#{Tiger.available_tigers.sample.name} is melancholy today!".colorize(:pink), 
-                "#{Tiger.available_tigers.sample.name} yearns for the wilderness!".colorize(:pink), 
-                "#{Tiger.available_tigers.sample.name} has been made gaunt and feeble by captivity!".colorize(:pink),
-                "#{Tiger.available_tigers.sample.name} has taken a liking to you!".colorize(:pink),  
-                "It's sweltering today at #{Zoo.last.name}!".colorize(:pink), 
-                "Look out, #{Zookeeper.last.name}! There's a tiger behind you!".colorize(:pink) 
+            messages = ["#{Tiger.available_tigers.sample.name} yawns lazily!", 
+                "#{Tiger.available_tigers.sample.name} is sleeping soundly!",
+                "Your tiger #{Tiger.available_tigers.sample.name} looks especially fluffy today!", 
+                "#{Tiger.available_tigers.sample.name} is giving off a funky smell!", 
+                "Your tiger #{Tiger.available_tigers.sample.name} is prancing about the enclosure!", 
+                "#{Tiger.available_tigers.sample.name} is going for a dip in the pool!", 
+                "#{Tiger.available_tigers.sample.name} is melancholy today!", 
+                "#{Tiger.available_tigers.sample.name} yearns for the wilderness!", 
+                "#{Tiger.available_tigers.sample.name} has been made gaunt and feeble by captivity!",
+                "#{Tiger.available_tigers.sample.name} has taken a liking to you!",  
+                "It's sweltering today at #{Zoo.last.name}!", 
+                "Look out, #{Zookeeper.last.name}! There's a tiger behind you!"
             ] 
         end 
         if Tiger.all.select{|tiger| tiger.name == "Floyd" && tiger.zoo_id == Zoo.last.id } == [ ] 
-            messages << "Rumours are circulating of a majestic tiger named Floyd. I heard he's pretty hard to pin down, though.".colorize(:pink)
-            messages << "Have you gotten Floyd yet?".colorize(:pink)
+            messages << "Rumours are circulating of a majestic tiger named Floyd. I heard he's pretty hard to pin down, though."
+            messages << "Have you gotten Floyd yet?"
         end 
         if Zoo.last.money <= 500 
-            messages = ["#{Zoo.last.name} seems to be in some financial trouble!".colorize(:pink),
-                "You need to make more money, #{Zookeeper.last.name}!".colorize(:pink) 
+            messages = ["#{Zoo.last.name} seems to be in some financial trouble!",
+                "You need to make more money, #{Zookeeper.last.name}!"
             ] 
         end 
-        puts messages.sample 
-    end 
+        puts messages.sample.colorize(:light_red)
+    end  
 end

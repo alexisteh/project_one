@@ -112,7 +112,12 @@ class Tiger < ActiveRecord::Base
 
         input = $prompt.yes?("Are you sure you want to submit this tiger to torture?".colorize(:cyan))
         if input == true 
+            if tiger_object.health >= 40  
             tiger_object.showcase 
+            else
+                puts "This tiger is really sick! You can't showcase #{tiger_chosen}!".colorize(:red) 
+                Interface.game_run_method  
+            end 
         else 
             puts "You are very kind!".colorize(:green)
             Interface.game_run_method

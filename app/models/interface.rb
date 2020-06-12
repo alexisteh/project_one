@@ -255,10 +255,12 @@ class Interface
     def self.exit_game 
         puts "Thanks for playing Tiger King!".colorize(:yellow) 
         puts "You made $#{Zoo.last.money} in #{Zoo.last.name}. Good job!".colorize(:light_yellow)  
-        choices = ["Play again!", "Goodbye for good!"] 
+        choices = ["Play again!", "Goodbye for good!", "See Highscores!"] 
         choice = $prompt.select("Pick an option:".colorize(:cyan), choices)
-        if choice == "Play again!"
+        if choice == "Play again!" 
             self.pick_character_and_zoo
+        elsif choice == "See Highscores!"
+            self.show_highscores 
         else exit
         end 
     end 
